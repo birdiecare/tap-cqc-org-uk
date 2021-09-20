@@ -1,0 +1,124 @@
+{
+    "type": [
+        "null", 
+        "object"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "provider_id": {"type": "string"},
+        "name": {"type": ["null", "string"]},
+        "locationIds": {"type": ["null", "array"], "items": {"type": "string"}},
+        "organisationType": {"type": ["null", "string"]},
+        "ownershipType": {"type": ["null", "string"]},
+        "type": {"type": ["null", "string"]},
+        "brandId": {"type": ["null", "string"]},
+        "brandName": {"type": ["null", "string"]},
+        "odsCode": {"type": ["null", "string"]},
+        "registrationStatus": {"type": ["null", "string"]},
+        "registrationDate": {"type": ["null", "string"], "format": "date"},
+        "companiesHouseNumber": {"type": ["null", "string"]},
+        "charityNumber": {"type": ["null", "string"]},
+        "website": {"type": ["null", "string"]},
+        "postalAddressLine1": {"type": ["null", "string"]},
+        "postalAddressLine2": {"type": ["null", "string"]},
+        "postalAddressTownCity": {"type": ["null", "string"]},
+        "postalAddressCounty": {"type": ["null", "string"]},
+        "region": {"type": ["null", "string"]},
+        "postalCode": {"type": ["null", "string"]},
+        "uprn": {"type": ["null", "string"]},
+        "onspdLatitude": {"type": "number"},
+        "onspdLongitude": {"type": "number"},
+        "mainPhoneNumber": {"type": ["null", "string"]},
+        "inspectionDirectorate": {"type": ["null", "string"]},
+        "constituency": {"type": ["null", "string"]},
+        "localAuthority": {"type": ["null", "string"]},
+
+        "contacts": {
+            "type": "array",
+            "items": 
+            {
+                "type": "object",
+                "properties": {
+                "personTitle": {
+                    "type": ["null", "string"]
+                },
+                "personGivenName": {
+                    "type": ["null", "string"]
+                },
+                "personFamilyName": {
+                    "type": ["null", "string"]
+                },
+                "personRoles": {
+                    "type": "array",
+                    "items": 
+                    {
+                        "type": ["null", "string"]
+                    }                    
+                }
+                }
+            }
+        },
+
+        "regulatedActivities": {
+            "type": "array",
+            "items":
+            {
+                "type": "object",
+                "properties": {
+                "name": {
+                    "type": ["null", "string"]
+                },
+                "code": {
+                    "type": ["null", "string"]
+                },
+                "nominatedIndividual": {
+                    "type": "object",
+                    "properties": {
+                    "personTitle": {
+                        "type": ["null", "string"]
+                    },
+                    "personGivenName": {
+                        "type": ["null", "string"]
+                    },
+                    "personFamilyName": {
+                        "type": ["null", "string"]
+                    }
+                    }
+                }
+                }
+            }
+        },
+
+        "inspectionAreas": {
+            "type": "array",
+            "items": 
+            {
+                "type": "object",
+                "properties": {
+                "inspectionAreaId": {
+                    "type": ["null", "string"]
+                },
+                "inspectionAreaName": {
+                    "type": ["null", "string"]
+                },
+                "inspectionAreaType": {
+                    "type": ["null", "string"]
+                },
+                "status": {
+                    "type": ["null", "string"]
+                },
+                "supersededBy": {
+                    "type": "array",
+                    "items": 
+                    {
+                        "type": ["null", "string"]
+                    }
+                }
+                }
+            }
+        }  
+
+
+    }
+
+}

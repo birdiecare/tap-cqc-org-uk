@@ -1,2 +1,4 @@
+.env
+.meltano/*
 tap_cqc_org_uk/__pycache__/*.pyc
 tap_cqc_org_uk/tests/__pycache__/*.pyc

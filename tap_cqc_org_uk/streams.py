@@ -22,6 +22,7 @@ class UpdatedProviderIdsStream(cqc_org_ukStream):
     primary_keys = ["provider_id"]
     replication_key = None
     records_jsonpath = "$.changes[*]"  # Or override `parse_response`.
+
     schema = th.PropertiesList(
         th.Property("provider_id", th.StringType)
     ).to_dict()
@@ -49,7 +50,15 @@ class UpdatedProvidersStream(cqc_org_ukStream):
     primary_keys = ["provider_id"]
     replication_key = None
     records_jsonpath = "$"
-    schema = th.PropertiesList(
-        th.Property("providerId", th.StringType),
-        th.Property("name", th.StringType)
-    ).to_dict()
+
+    # Optionally, you may also use `schema_filepath` in place of `schema`:
+    schema_filepath = SCHEMAS_DIR / "updatedProviders.json"
+    # schema = th.PropertiesList(
+    #     th.Property("provider_id", th.StringType),
+    #     th.Property("name", th.StringType),
+    #     th.Property("organisationType", th.StringType)
+    # ).to_dict()
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        """Parse the response and return an iterator of result rows."""    
+        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
