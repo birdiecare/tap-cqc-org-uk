@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "tap-cqc-org-uk"
+version = "0.0.1"
+description = "`tap-cqc-org-uk` is a Singer tap for cqc-org-uk, built with the Meltano SDK for Singer Taps."
+authors = ["Ben White"]
+license = "Apache 2.0"
+
+[tool.poetry.dependencies]
+python = "<3.9,>=3.6.1"
+requests = "^2.25.1"
+singer-sdk = "^0.3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+# CLI declaration
+tap-cqc-org-uk = 'tap_cqc_org_uk.tap:Tapcqc-org-uk.cli'
