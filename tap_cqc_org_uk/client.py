@@ -13,10 +13,10 @@ from singer_sdk.streams import RESTStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
-class cqc-org-ukStream(RESTStream):
+class cqc_org_ukStream(RESTStream):
     """cqc-org-uk stream class."""
 
-    url_base = "https://api.mysample.com"
+    url_base = "https://api.cqc.org.uk/public/v1"
 
     # OR use a dynamic url_base:
     # @property
@@ -24,8 +24,8 @@ class cqc-org-ukStream(RESTStream):
     #     """Return the API URL root, configurable via tap settings."""
     #     return self.config["api_url"]
 
-    records_jsonpath = "$[*]"  # Or override `parse_response`.
-    next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
+    records_jsonpath = "$"  # Or override `parse_response`.
+    next_page_token_jsonpath = "$.nextPageUri"  # Or override `get_next_page_token`.
 
     @property
     def http_headers(self) -> dict:
@@ -60,11 +60,15 @@ class cqc-org-ukStream(RESTStream):
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
-        if next_page_token:
-            params["page"] = next_page_token
-        if self.replication_key:
-            params["sort"] = "asc"
-            params["order_by"] = self.replication_key
+        params["startTimestamp"] = "2021-01-31T00:33:20Z"
+        params["endTimestamp"] = "2021-02-01T00:00:00Z"
+        params["partnerCode"] = self.config["partner_code"]
+
+        # if next_page_token:
+        #     params["page"] = next_page_token
+        # if self.replication_key:
+        #     params["sort"] = "asc"
+        #     params["order_by"] = self.replication_key
         return params
 
     def prepare_request_payload(
@@ -80,6 +84,7 @@ class cqc-org-ukStream(RESTStream):
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         # TODO: Parse response body and return a set of records.
+        print(response.json())
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:

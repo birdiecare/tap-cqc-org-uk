@@ -19,4 +19,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 # CLI declaration
-tap-cqc-org-uk = 'tap_cqc_org_uk.tap:Tapcqc-org-uk.cli'
+tap-cqc-org-uk = 'tap_cqc_org_uk.tap:Tapcqc_org_uk.cli'

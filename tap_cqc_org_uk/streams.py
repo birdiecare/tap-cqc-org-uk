@@ -1,11 +1,13 @@
 """Stream type classes for tap-cqc-org-uk."""
 
+import requests
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
+from singer_sdk.helpers.jsonpath import extract_jsonpath
 
-from tap_cqc_org_uk.client import cqc-org-ukStream
+from tap_cqc_org_uk.client import cqc_org_ukStream
 
 # TODO: Delete this is if not using json files for schema definition
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -13,34 +15,41 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 #       - Copy-paste as many times as needed to create multiple stream types.
 
 
-class UsersStream(cqc-org-ukStream):
-    """Define custom stream."""
-    name = "users"
-    path = "/users"
-    primary_keys = ["id"]
+class UpdatedProviderIdsStream(cqc_org_ukStream):
+    """Define stream of just the IDs for updated providers."""
+    name = "UpdatedProviderIds"
+    path = "/changes/provider"
+    primary_keys = ["provider_id"]
     replication_key = None
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    # schema_filepath = SCHEMAS_DIR / "users.json"
+    records_jsonpath = "$.changes[*]"  # Or override `parse_response`.
     schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property("id", th.StringType),
-        th.Property("age", th.IntegerType),
-        th.Property("email", th.StringType),
-        th.Property("street", th.StringType),
-        th.Property("city", th.StringType),
-        th.Property("state", th.StringType),
-        th.Property("zip", th.StringType),
+        th.Property("provider_id", th.StringType)
     ).to_dict()
 
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        """Parse the response and return an iterator of results rows"""
+        updated_providers = extract_jsonpath(self.records_jsonpath, input=response.json())
 
-class GroupsStream(cqc-org-ukStream):
-    """Define custom stream."""
-    name = "groups"
-    path = "/groups"
-    primary_keys = ["id"]
-    replication_key = "modified"
+        for id in updated_providers:
+            yield {"provider_id": id}
+    
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Create context for child 'UpdatedProviders' stream"""
+        return {
+            "provider_id": record["provider_id"]
+        }
+
+
+class UpdatedProvidersStream(cqc_org_ukStream):
+    """Define stream for all details of updated providers."""
+
+    name = "UpdatedProviders"
+    path = "/providers/{provider_id}"
+    parent_stream_type = UpdatedProviderIdsStream
+    primary_keys = ["provider_id"]
+    replication_key = None
+    records_jsonpath = "$"
     schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property("id", th.StringType),
-        th.Property("modified", th.DateTimeType),
+        th.Property("providerId", th.StringType),
+        th.Property("name", th.StringType)
     ).to_dict()
