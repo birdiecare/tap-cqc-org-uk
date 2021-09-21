@@ -33,6 +33,26 @@
         "constituency": {"type": ["null", "string"]},
         "localAuthority": {"type": ["null", "string"]},
 
+        "lastInspection": {
+            "type": "object",
+            "properties": {
+            "date": {
+                "type":["null", "string"],
+                "format": "date"
+            }
+            }
+        },
+
+        "lastReport": {
+            "type": "object",
+            "properties": {
+            "publicationDate": {
+                "type":["null", "string"],
+                "format": "date"
+            }
+            }
+        },
+
         "contacts": {
             "type": "array",
             "items": 
@@ -116,7 +136,29 @@
                 }
                 }
             }
-        }  
+        },
+        
+        "relationships": {
+            "type": "array",
+            "items": 
+            {
+                "type": "object",
+                "properties": {
+                "relatedProviderId": {
+                    "type": ["null", "string"]
+                },
+                "relatedProviderName": {
+                    "type": ["null", "string"]
+                },
+                "type": {
+                    "type": ["null", "string"]
+                },
+                "reason": {
+                    "type": ["null", "string"]
+                }
+                }
+            }
+        }
 
 
     }
