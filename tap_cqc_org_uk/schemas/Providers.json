@@ -5,7 +5,8 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "provider_id": {"type": "string"},
+        "provider_id": {"type": "string" , "format": "datetime"},
+        "time_extracted": {"type": "string"}, 
         "name": {"type": ["null", "string"]},
         "locationIds": {"type": ["null", "array"], "items": {"type": "string"}},
         "organisationType": {"type": ["null", "string"]},

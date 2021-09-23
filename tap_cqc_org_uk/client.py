@@ -1,6 +1,6 @@
 """REST client handling, including cqc-org-ukStream base class."""
 
-import requests
+import requests, datetime, backoff
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
@@ -12,11 +12,11 @@ from singer_sdk.streams import RESTStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-
 class cqc_org_ukStream(RESTStream):
     """cqc-org-uk stream class."""
 
     url_base = "https://api.cqc.org.uk/public/v1"
+    api_date_format = "%Y-%m-%dT%H:%M:%SZ"
 
     # OR use a dynamic url_base:
     # @property
@@ -60,15 +60,8 @@ class cqc_org_ukStream(RESTStream):
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
-        params["startTimestamp"] = "2021-01-31T00:33:20Z"
-        params["endTimestamp"] = "2021-02-01T00:00:00Z"
         params["partnerCode"] = self.config["partner_code"]
-
-        # if next_page_token:
-        #     params["page"] = next_page_token
-        # if self.replication_key:
-        #     params["sort"] = "asc"
-        #     params["order_by"] = self.replication_key
+        
         return params
 
     def prepare_request_payload(
@@ -88,5 +81,54 @@ class cqc_org_ukStream(RESTStream):
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure."""
-        # TODO: Delete this method if not needed.
+        row["time_extracted"] = datetime.datetime.now().strftime(self.api_date_format)
         return row
+
+
+    # Handle "Error 429 Rate limit exceeded" 
+    # Many thanks to Pablo Seibelt (https://meltano.slack.com/team/U01VA6FNM55) see this slack thread...
+    # https://meltano.slack.com/archives/C01PKLU5D1R/p1628695715006300?thread_ts=1628695448.005500&cid=C01PKLU5D1R
+    @backoff.on_exception(
+        backoff.expo,
+        (requests.exceptions.RequestException),
+        max_tries=8,
+        giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500 and e.response.status_code != 429,
+        factor=2,
+    )
+    def _request_with_backoff(
+        self, prepared_request, context: Optional[dict]
+    ) -> requests.Response:
+        response = self.requests_session.send(prepared_request)
+        if self._LOG_REQUEST_METRICS:
+            extra_tags = {}
+            if self._LOG_REQUEST_METRIC_URLS:
+                extra_tags["url"] = cast(str, prepared_request.path_url)
+            self._write_request_duration_log(
+                endpoint=self.path,
+                response=response,
+                context=context,
+                extra_tags=extra_tags,
+            )
+        if response.status_code in [401, 403]:
+            self.logger.info("Failed request for {}".format(prepared_request.url))
+            self.logger.info(
+                f"Reason: {response.status_code} - {str(response.content)}"
+            )
+            raise RuntimeError(
+                "Requested resource was unauthorized, forbidden, or not found."
+            )
+        if response.status_code == 429:
+            self.logger.info("Throttled request for {}".format(prepared_request.url))
+            raise requests.exceptions.RequestException(
+                request=prepared_request,
+                response=response
+            )
+        elif response.status_code >= 400:
+            raise RuntimeError(
+                f"Error making request to API: {prepared_request.url} "
+                f"[{response.status_code} - {str(response.content)}]".replace(
+                    "\\n", "\n"
+                )
+            )
+
+        return response

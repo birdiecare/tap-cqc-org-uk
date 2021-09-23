@@ -1,6 +1,6 @@
 """Stream type classes for tap-cqc-org-uk."""
 
-import requests
+import requests, datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
@@ -9,23 +9,31 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 
 from tap_cqc_org_uk.client import cqc_org_ukStream
 
-# TODO: Delete this is if not using json files for schema definition
+
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-# TODO: - Override `UsersStream` and `GroupsStream` with your own stream definition.
-#       - Copy-paste as many times as needed to create multiple stream types.
 
 
-class UpdatedProviderIdsStream(cqc_org_ukStream):
+class ProviderIdsStream(cqc_org_ukStream):
     """Define stream of just the IDs for updated providers."""
-    name = "UpdatedProviderIds"
+    name = "ProviderIds"
     path = "/changes/provider"
     primary_keys = ["provider_id"]
-    replication_key = None
-    records_jsonpath = "$.changes[*]"  # Or override `parse_response`.
+    replication_key = "time_extracted"
+    records_jsonpath = "$.changes[*]"  
 
     schema = th.PropertiesList(
-        th.Property("provider_id", th.StringType)
+        th.Property("provider_id", th.StringType),
+        th.Property("time_extracted", th.DateTimeType)
     ).to_dict()
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+
+        params = super().get_url_params(context, next_page_token)
+        
+        params["startTimestamp"] = self.get_starting_timestamp(context).strftime(self.api_date_format)
+        params["endTimestamp"] = datetime.datetime.now().strftime(self.api_date_format)
+        
+        return params
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of results rows"""
@@ -35,29 +43,22 @@ class UpdatedProviderIdsStream(cqc_org_ukStream):
             yield {"provider_id": id}
     
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        """Create context for child 'UpdatedProviders' stream"""
+        """Create context for child 'Providers' stream"""
         return {
             "provider_id": record["provider_id"]
         }
 
 
-class UpdatedProvidersStream(cqc_org_ukStream):
+class ProvidersStream(cqc_org_ukStream):
     """Define stream for all details of updated providers."""
 
-    name = "UpdatedProviders"
+    name = "Providers"
     path = "/providers/{provider_id}"
-    parent_stream_type = UpdatedProviderIdsStream
+    parent_stream_type = ProviderIdsStream
     primary_keys = ["provider_id"]
-    replication_key = None
+    replication_key = "time_extracted"
     records_jsonpath = "$"
-
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    schema_filepath = SCHEMAS_DIR / "updatedProviders.json"
-    # schema = th.PropertiesList(
-    #     th.Property("provider_id", th.StringType),
-    #     th.Property("name", th.StringType),
-    #     th.Property("organisationType", th.StringType)
-    # ).to_dict()
+    schema_filepath = SCHEMAS_DIR / "Providers.json"
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""    
