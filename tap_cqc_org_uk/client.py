@@ -91,9 +91,9 @@ class cqc_org_ukStream(RESTStream):
     @backoff.on_exception(
         backoff.expo,
         (requests.exceptions.RequestException),
-        max_tries=8,
+        max_tries=16,
         giveup=lambda e: e.response is not None and 400 <= e.response.status_code < 500 and e.response.status_code != 429,
-        factor=2,
+        factor=10,
     )
     def _request_with_backoff(
         self, prepared_request, context: Optional[dict]
