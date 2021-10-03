@@ -1,6 +1,8 @@
 """Stream type classes for tap-cqc-org-uk."""
 
 import requests, datetime
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
@@ -14,7 +16,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
 class ProviderIdsStream(cqc_org_ukStream):
-    """Define stream of just the IDs for updated providers."""
+    """Define stream for the IDs of updated providers."""
     name = "ProviderIds"
     path = "/changes/provider"
     primary_keys = ["provider_id"]
@@ -26,6 +28,7 @@ class ProviderIdsStream(cqc_org_ukStream):
         th.Property("time_extracted", th.DateTimeType)
     ).to_dict()
 
+
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
 
         params = super().get_url_params(context, next_page_token)
@@ -33,7 +36,12 @@ class ProviderIdsStream(cqc_org_ukStream):
         params["startTimestamp"] = self.get_starting_timestamp(context).strftime(self.api_date_format)
         params["endTimestamp"] = datetime.datetime.now().strftime(self.api_date_format)
         
+        if next_page_token:
+            next_page_token_query = parse_qs(urlparse(next_page_token).query)
+            params["page"] = next_page_token_query["page"][0]
+        
         return params
+
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of results rows"""
@@ -42,11 +50,13 @@ class ProviderIdsStream(cqc_org_ukStream):
         for id in updated_providers:
             yield {"provider_id": id}
     
+
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Create context for child 'Providers' stream"""
         return {
             "provider_id": record["provider_id"]
         }
+
 
 
 class ProvidersStream(cqc_org_ukStream):
@@ -60,6 +70,13 @@ class ProvidersStream(cqc_org_ukStream):
     records_jsonpath = "$"
     schema_filepath = SCHEMAS_DIR / "Providers.json"
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        """Parse the response and return an iterator of result rows."""    
-        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+    def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
+
+        response = self.requests_session.send(prepared_request)
+
+        # Ignore provider ids with records that cannot be found
+        if response.status_code == 404:
+            return response
+
+        return super()._request_with_backoff(prepared_request, context)
+
