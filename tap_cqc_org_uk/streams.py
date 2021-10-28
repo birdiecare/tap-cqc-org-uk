@@ -132,10 +132,10 @@ class CQC_LocationsStream(cqc_org_ukStream):
     name = "CQC_Locations"
     path = "/locations/{location_id}"
     parent_stream_type = CQC_LocationIdsStream
-    primary_keys = ["location_id"]
+    primary_keys = ["locationId"]
     replication_key = "time_extracted"
     records_jsonpath = "$"
-    schema_filepath = SCHEMAS_DIR / "Locations.json"
+    schema_filepath = SCHEMAS_DIR / "CQC_Locations.json"
 
     def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
 

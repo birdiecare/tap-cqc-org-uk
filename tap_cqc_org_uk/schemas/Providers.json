@@ -3,10 +3,9 @@
         "null", 
         "object"
     ],
-    "additionalProperties": false,
     "properties": {
-        "provider_id": {"type": ["null", "string"] , "format": "datetime"},
-        "time_extracted": {"type": ["null", "string"]}, 
+        "provider_id": {"type": ["null", "string"]},
+        "time_extracted": {"type": ["null", "string"], "format": "datetime"}, 
         "name": {"type": ["null", "string"]},
         "locationIds": {"type": ["null", "array"], "items": {"type": ["null", "string"]}},
         "organisationType": {"type": ["null", "string"]},
