@@ -15,9 +15,9 @@ from tap_cqc_org_uk.client import cqc_org_ukStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 # PROVIDER STREAMS
-class ProviderIdsStream(cqc_org_ukStream):
+class CQC_ProviderIdsStream(cqc_org_ukStream):
     """Define stream for the IDs of updated providers."""
-    name = "ProviderIds"
+    name = "CQC_ProviderIds"
     path = "/changes/provider"
     primary_keys = ["provider_id"]
     replication_key = "time_extracted"
@@ -59,16 +59,16 @@ class ProviderIdsStream(cqc_org_ukStream):
 
 
 
-class ProvidersStream(cqc_org_ukStream):
+class CQC_ProvidersStream(cqc_org_ukStream):
     """Define stream for all details of updated providers."""
 
-    name = "Providers"
+    name = "CQC_Providers"
     path = "/providers/{provider_id}"
-    parent_stream_type = ProviderIdsStream
+    parent_stream_type = CQC_ProviderIdsStream
     primary_keys = ["provider_id"]
     replication_key = "time_extracted"
     records_jsonpath = "$"
-    schema_filepath = SCHEMAS_DIR / "Providers.json"
+    schema_filepath = SCHEMAS_DIR / "CQC_Providers.json"
 
     def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
 
