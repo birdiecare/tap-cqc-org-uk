@@ -9,13 +9,17 @@ from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_cqc_org_uk.streams import (
     cqc_org_ukStream,
     ProviderIdsStream,
-    ProvidersStream
+    ProvidersStream,
+    CQC_LocationIdsStream,
+    CQC_LocationsStream
 )
 # TODO: Compile a list of custom stream types here
 #       OR rewrite discover_streams() below with your custom logic.
 STREAM_TYPES = [
     ProvidersStream,
-    ProviderIdsStream
+    ProviderIdsStream,
+    CQC_LocationIdsStream,
+    CQC_LocationsStream
 ]
 
 
