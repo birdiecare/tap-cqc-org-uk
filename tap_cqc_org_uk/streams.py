@@ -86,12 +86,12 @@ class CQC_LocationIdsStream(cqc_org_ukStream):
     """Define stream for the IDs of updated locations."""
     name = "CQC_LocationIds"
     path = "/changes/location"
-    primary_keys = ["location_id"]
+    primary_keys = ["locationId"]
     replication_key = "time_extracted"
     records_jsonpath = "$.changes[*]"  
 
     schema = th.PropertiesList(
-        th.Property("location_id", th.StringType),
+        th.Property("locationId", th.StringType),
         th.Property("time_extracted", th.DateTimeType)
     ).to_dict()
 
@@ -115,13 +115,13 @@ class CQC_LocationIdsStream(cqc_org_ukStream):
         updated_locations = extract_jsonpath(self.records_jsonpath, input=response.json())
 
         for id in updated_locations:
-            yield {"location_id": id}
+            yield {"locationId": id}
     
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Create context for child 'Locations' stream"""
         return {
-            "location_id": record["location_id"]
+            "locationId": record["locationId"]
         }
 
 
@@ -130,7 +130,7 @@ class CQC_LocationsStream(cqc_org_ukStream):
     """Define stream for all details of updated locations."""
 
     name = "CQC_Locations"
-    path = "/locations/{location_id}"
+    path = "/locations/{locationId}"
     parent_stream_type = CQC_LocationIdsStream
     primary_keys = ["locationId"]
     replication_key = "time_extracted"
