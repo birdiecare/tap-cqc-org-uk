@@ -17,6 +17,7 @@
       "odsCode": { "type": ["null", "string"]},
       "registrationStatus": { "type": ["null", "string"]},
       "registrationDate": { "type": ["null", "string"], "format": "date"},
+      "dormancy": { "type": ["null", "string"]},
       "onspdLatitude": { "type": ["null", "number"]},
       "onspdLongitude": { "type": ["null", "number"]},
       "careHome": { "type": ["null", "string"]},
@@ -33,7 +34,7 @@
       "localAuthority": { "type": ["null", "string"]},
 
       "lastReport": {
-        "type": "object",
+        "type": ["null", "object"],
         "properties": {
           "publicationDate": {
             "type": ["null", "string"],
@@ -43,9 +44,9 @@
         
       },
       "relationships": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "relatedLocationId": {
               "type": ["null", "string"]
@@ -63,9 +64,9 @@
         }
       },
       "locationTypes": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "type": {
               "type": ["null", "string"]
@@ -74,9 +75,9 @@
         }
       },
       "regulatedActivities": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "name": {
               "type": ["null", "string"]
@@ -85,9 +86,9 @@
               "type": ["null", "string"]
             },
             "contacts": {
-              "type": "array",
+              "type": ["null", "array"],
               "items": {
-                "type": "object",
+                "type": ["null", "object"],
                 "properties": {
                   "personTitle": {
                     "type": ["null", "string"]
@@ -99,7 +100,7 @@
                     "type": ["null", "string"]
                   },
                   "personRoles": {
-                    "type": "array",
+                    "type": ["null", "array"],
                     "items": {
                       "type": ["null", "string"]
                     }
@@ -112,9 +113,9 @@
         
       },
       "gacServiceTypes": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "name": {
               "type": ["null", "string"]
@@ -127,9 +128,9 @@
         }   
       },
       "specialisms": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "name": {
               "type": ["null", "string"]
@@ -138,9 +139,9 @@
         }
       },
       "inspectionCategories": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "primary": {
               "type": ["null", "string"]
@@ -155,9 +156,9 @@
         }
       },
       "inspectionAreas": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "inspectionAreaId": {
               "type": ["null", "string"]
@@ -172,7 +173,7 @@
               "type": ["null", "string"]
             },
             "supersededBy": {
-              "type": "array",
+              "type": ["null", "array"],
               "items": {
                 "type": ["null", "string"]
               }
@@ -185,10 +186,10 @@
         }
       },
       "currentRatings": {
-        "type": "object",
+        "type": ["null", "object"],
         "properties": {
           "overall": {
-            "type": "object",
+            "type": ["null", "object"],
             "properties": {
               "rating": {
                 "type": ["null", "string"]
@@ -201,7 +202,7 @@
                 "type": ["null", "string"]
               },
               "useOfResources": {
-                "type": "object",
+                "type": ["null", "object"],
                 "properties": {
                   "useOfResourcesSummary": {
                     "type": ["null", "string"]
@@ -226,9 +227,9 @@
                 
               },
               "keyQuestionRatings": {
-                "type": "array",
+                "type": ["null", "array"],
                 "items": {
-                  "type": "object",
+                  "type": ["null", "object"],
                   "properties": {
                     "name": {
                       "type": ["null", "string"]
@@ -252,9 +253,9 @@
             }
           },
           "serviceRatings": {
-            "type": "array",
+            "type": ["null", "array"],
             "items": {
-              "type": "object",
+              "type": ["null", "object"],
               "properties": {
                 "name": {
                   "type": ["null", "string"]
@@ -273,9 +274,9 @@
                   "type": ["null", "string"]
                 },
                 "keyQuestionRatings": {
-                  "type": "array",
+                  "type": ["null", "array"],
                   "items": {
-                    "type": "object",
+                    "type": ["null", "object"],
                     "properties": {
                       "name": {
                         "type": ["null", "string"]
@@ -293,9 +294,9 @@
         
       },
       "historicRatings": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "reportDate": {
               "type": ["null", "string"],
@@ -308,9 +309,9 @@
               "type": ["null", "string"]
             },
             "serviceRatings": {
-              "type": "array",
+              "type": ["null", "array"],
               "items": {
-                "type": "object",
+                "type": ["null", "object"],
                 "properties": {
                   "name": {
                     "type": ["null", "string"]
@@ -319,9 +320,9 @@
                     "type": ["null", "string"]
                   },
                   "keyQuestionRatings": {
-                    "type": "array",
+                    "type": ["null", "array"],
                     "items": {
-                      "type": "object",
+                      "type": ["null", "object"],
                       "properties": {
                         "name": {
                           "type": ["null", "string"]
@@ -337,13 +338,13 @@
               } 
             },
             "overall": {
-              "type": "object",
+              "type": ["null", "object"],
               "properties": {
                 "rating": {
                   "type": ["null", "string"]
                 },
                 "useOfResources": {
-                  "type": "object",
+                  "type": ["null", "object"],
                   "properties": {
                     "useOfResourcesSummary": {
                       "type": ["null", "string"]
@@ -361,9 +362,9 @@
                   
                 },
                 "keyQuestionRatings": {
-                  "type": "array",
+                  "type": ["null", "array"],
                   "items": {
-                    "type": "object",
+                    "type": ["null", "object"],
                     "properties": {
                       "name": {
                         "type": ["null", "string"]
@@ -381,9 +382,9 @@
         }
       },
       "reports": {
-        "type": "array",
+        "type": ["null", "array"],
         "items": {
-          "type": "object",
+          "type": ["null", "object"],
           "properties": {
             "linkId": {
               "type": ["null", "string"]
@@ -403,9 +404,9 @@
               "type": ["null", "string"]
             },
             "relatedDocuments": {
-              "type": "array",
+              "type": ["null", "array"],
               "items": {
-                "type": "object",
+                "type": ["null", "object"],
                 "properties": {
                   "documentUri": {
                     "type": ["null", "string"]
