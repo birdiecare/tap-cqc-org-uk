@@ -17,6 +17,7 @@
         "odsCode": {"type": ["null", "string"]},
         "registrationStatus": {"type": ["null", "string"]},
         "registrationDate": {"type": ["null", "string"], "format": "date"},
+        "deregistrationDate": {"type": ["null", "string"], "format": "date"},
         "companiesHouseNumber": {"type": ["null", "string"]},
         "charityNumber": {"type": ["null", "string"]},
         "website": {"type": ["null", "string"]},

@@ -17,13 +17,16 @@
       "odsCode": { "type": ["null", "string"]},
       "registrationStatus": { "type": ["null", "string"]},
       "registrationDate": { "type": ["null", "string"], "format": "date"},
+      "deregistrationDate": { "type": ["null", "string"], "format": "date"},
       "dormancy": { "type": ["null", "string"]},
       "onspdLatitude": { "type": ["null", "number"]},
       "onspdLongitude": { "type": ["null", "number"]},
       "careHome": { "type": ["null", "string"]},
       "inspectionDirectorate": { "type": ["null", "string"]},
       "postalAddressLine1": { "type": ["null", "string"]},
+      "postalAddressLine2": { "type": ["null", "string"]},
       "postalAddressTownCity": { "type": ["null", "string"]},
+      "postalAddressCounty": { "type": ["null", "string"]},
       "region": { "type": ["null", "string"]},
       "postalCode": { "type": ["null", "string"]},
       "uprn": { "type": ["null", "string"]},
@@ -32,6 +35,16 @@
       "numberOfBeds": { "type": ["null", "integer"]},
       "constituency": { "type": ["null", "string"]},
       "localAuthority": { "type": ["null", "string"]},
+
+      "lastInspection": {
+        "type": ["null", "object"],
+        "properties": {
+        "date": {
+            "type":["null", "string"],
+            "format": "date"
+        }
+        }
+      },
 
       "lastReport": {
         "type": ["null", "object"],
