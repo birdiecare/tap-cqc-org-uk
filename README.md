@@ -41,7 +41,7 @@ where `config_example.json` is
 ```
 
 - `partner_code`: a code used to identify your usage of the API to the CQC.
-- `start_date`: the date from which changes will be downloaded. Not that if a record was created before this date and not updated after it then it will not be downloaded by the tap.
+- `start_date`: the date from which changes will be downloaded. Note that if a record was created before this date and not updated after it then it will not be downloaded by the tap.
 
 ## Usage
 
