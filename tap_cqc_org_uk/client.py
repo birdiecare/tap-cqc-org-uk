@@ -10,8 +10,6 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.exceptions import FatalAPIError, RetriableAPIError
 from singer_sdk.streams import RESTStream
 
-
-
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 class cqc_org_ukStream(RESTStream):
@@ -38,7 +36,7 @@ class cqc_org_ukStream(RESTStream):
         return row
 
     def request_decorator(self, func: Callable) -> Callable:
-        # Increase backoff factor and max trries from defaults (2 and 5 respectively)
+        # Increase backoff factor and max tries from defaults (2 and 5 respectively)
         decorator: Callable = backoff.on_exception(
             backoff.expo,
             (
@@ -52,7 +50,8 @@ class cqc_org_ukStream(RESTStream):
 
 
     def validate_response(self, response):
-        if response.json().get('statusCode') == 429:
+         
+        if response.json().get('statusCode') == 429: # 429 == too many requests
             raise RetriableAPIError(response.json()['message'])
         else:
             super().validate_response(response)

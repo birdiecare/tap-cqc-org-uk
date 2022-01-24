@@ -70,15 +70,24 @@ class CQC_ProvidersStream(cqc_org_ukStream):
     records_jsonpath = "$"
     schema_filepath = SCHEMAS_DIR / "CQC_Providers.json"
 
-    def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
+    # def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
 
-        response = self.requests_session.send(prepared_request)
+    #     response = self.requests_session.send(prepared_request)
+
+    #     # Ignore provider ids with records that cannot be found
+    #     if response.status_code == 404:
+    #         return response
+
+    #     return super()._request_with_backoff(prepared_request, context)
+
+    def validate_response(self, response):
 
         # Ignore provider ids with records that cannot be found
-        if response.status_code == 404:
+        if response.json().get('statusCode') == 404:
             return response
 
-        return super()._request_with_backoff(prepared_request, context)
+        return super().validate_response(response)
+
 
 
 # LOCATION STREAMS
@@ -137,12 +146,20 @@ class CQC_LocationsStream(cqc_org_ukStream):
     records_jsonpath = "$"
     schema_filepath = SCHEMAS_DIR / "CQC_Locations.json"
 
-    def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
-
-        response = self.requests_session.send(prepared_request)
+    def validate_response(self, response):
 
         # Ignore location ids with records that cannot be found
-        if response.status_code == 404:
+        if response.json().get('statusCode') == 404:
             return response
 
-        return super()._request_with_backoff(prepared_request, context)
+        return super().validate_response(response)
+
+    # def _request_with_backoff(self, prepared_request, context: Optional[dict]) -> requests.Response:
+
+    #     response = self.requests_session.send(prepared_request)
+
+    #     # Ignore location ids with records that cannot be found
+    #     if response.status_code == 404:
+    #         return response
+
+    #     return super()._request_with_backoff(prepared_request, context)
