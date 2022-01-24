@@ -48,10 +48,9 @@ class cqc_org_ukStream(RESTStream):
         )(func)
         return decorator
 
-
     def validate_response(self, response):
          
-        if response.json().get('statusCode') == 429: # 429 == too many requests
+        if response.status_code == 429: # 429 == too many requests
             raise RetriableAPIError(response.json()['message'])
         else:
             super().validate_response(response)
