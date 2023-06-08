@@ -1,6 +1,7 @@
 ### Initialize your Development Environment
 
 ```bash
+pipx install singer_sdk
 pipx install poetry
 poetry install
 ```
