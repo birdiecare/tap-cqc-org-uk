@@ -15,7 +15,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 class cqc_org_ukStream(RESTStream):
     """cqc-org-uk stream class."""
 
-    url_base = "https://api.cqc.org.uk/public/v1"
+    url_base = "https://api.service.cqc.org.uk/public/v1"
     api_date_format = "%Y-%m-%dT%H:%M:%SZ"
     records_jsonpath = "$" 
     next_page_token_jsonpath = "$.nextPageUri" 
@@ -26,7 +26,6 @@ class cqc_org_ukStream(RESTStream):
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
-        params["partnerCode"] = self.config["partner_code"]
         return params
 
 
@@ -54,3 +53,17 @@ class cqc_org_ukStream(RESTStream):
             raise RetriableAPIError(response.json()['message'])
         else:
             super().validate_response(response)
+
+    def prepare_request(
+            self, context: Optional[dict], next_page_token: Optional[Any]
+        ) -> requests.PreparedRequest:
+
+            request = super().prepare_request(context, next_page_token)
+
+            # Set the User-Agent header to the partner code (a user agent header is required)
+            request.headers["User-Agent"] = self.config["partner_code"]
+
+            # Replace the encoded colon in the URL with a regular colon (the API doesn't like the encoded version)
+            request.url = request.url.replace("%3A", ":")
+
+            return request
