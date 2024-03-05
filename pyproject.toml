@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-cqc-org-uk"
-version = "0.0.2"
+version = "0.0.3"
 description = "`tap-cqc-org-uk` is a Singer tap for cqc-org-uk, built with the Meltano SDK for Singer Taps."
 authors = ["Ben White"]
 license = "Apache 2.0"

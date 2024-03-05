@@ -66,5 +66,6 @@ class cqc_org_ukStream(RESTStream):
             # Replace the encoded colon in the URL with a regular colon (the API doesn't like the encoded version)
             # TODO: Apply urlencode python function in get_url_params method in streams instead. But, we will need to upgrade SDK version
             request.url = request.url.replace("%3A", ":")
+            print('Request URL: %s'.format(request.url))
 
             return request
