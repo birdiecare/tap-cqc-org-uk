@@ -63,6 +63,9 @@ class cqc_org_ukStream(RESTStream):
             # Set the User-Agent header to the partner code (a user agent header is required)
             request.headers["User-Agent"] = self.config["partner_code"]
 
+            # Auth
+            request.headers["Ocp-Apim-Subscription-Key"] = self.config["subscription_key"]
+
             # Replace the encoded colon in the URL with a regular colon (the API doesn't like the encoded version)
             # TODO: Apply urlencode python function in get_url_params method in streams instead. But, we will need to upgrade SDK version
             request.url = request.url.replace("%3A", ":")

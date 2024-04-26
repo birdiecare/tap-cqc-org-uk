@@ -8,7 +8,8 @@ from tap_cqc_org_uk.tap import Tapcqc_org_uk
 
 SAMPLE_CONFIG = {
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    "partner_code": "tap-cqc-org-uk-tests"
+    "partner_code": "tap-cqc-org-uk-tests",
+    "subscription_key": "XXXXXXX" # We should specify Primary Key to run the test
 }
 
 

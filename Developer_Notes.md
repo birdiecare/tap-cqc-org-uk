@@ -8,6 +8,8 @@ poetry install
 
 ### Create and Run Tests
 
+Before executing the test, set the subscription key based on the primary key got in CQC Portal
+
 Create tests within the `tap_cqc_org_uk/tests` subfolder and then run:
 `poetry run pytest`
 
