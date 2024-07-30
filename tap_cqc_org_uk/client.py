@@ -4,9 +4,7 @@ import requests, datetime, backoff
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Union, List, Iterable
 
-from memoization import cached
 
-from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.exceptions import FatalAPIError, RetriableAPIError
 from singer_sdk.streams import RESTStream
 
