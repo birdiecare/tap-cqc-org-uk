@@ -1,26 +1,37 @@
 """Tests standard tap features using the built-in SDK tests library."""
 
-import datetime
+import datetime, os
+from dotenv import load_dotenv
+load_dotenv()
 
-from singer_sdk.testing import get_standard_tap_tests
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+from singer_sdk.testing import get_tap_test_class
 
 from tap_cqc_org_uk.tap import Tapcqc_org_uk
 
 SAMPLE_CONFIG = {
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    "partner_code": "tap-cqc-org-uk-tests",
-    "subscription_key": "XXXXXXX" # We should specify Primary Key to run the test
+    "subscription_key": os.getenv("TEST_CQC_SUBSCRIPTION_KEY"),
 }
 
 
 # Run standard built-in tap tests from the SDK:
-def test_standard_tap_tests():
-    """Run standard tap tests from the SDK."""
-    tests = get_standard_tap_tests(
-        Tapcqc_org_uk,
-        config=SAMPLE_CONFIG
-    )
-    for test in tests:
-        test()
+TestTapcqc_org_uk = get_tap_test_class(
+    tap_class=Tapcqc_org_uk,
+    config=SAMPLE_CONFIG,
+)
 
-# TODO: Create additional tests as appropriate for your tap.
+
+def test_subscription_key_in_headers():
+    tap = Tapcqc_org_uk(config={
+        "start_date": "2024-01-01",
+        "subscription_key": "test_key",
+    })
+    stream = tap.streams["CQC_Providers"]
+    prepared_request = stream.prepare_request(context={}, next_page_token=None)
+
+    # Check that the subscription key is in the headers
+    assert "Ocp-Apim-Subscription-Key" in prepared_request.headers
+    assert prepared_request.headers["Ocp-Apim-Subscription-Key"] == "test_key"
