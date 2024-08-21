@@ -51,7 +51,6 @@ Make sure that you have a `meltano.yml` file in your root project folder like th
         value: '2021-12-01T00:00:00Z'
       config:
         start_date: $CQC_ORG_UK_TO_SNOWFLAKE_START_DATE
-        partner_code: Birdie Care
     loaders:
     - name: target-jsonl
       variant: andyh1203

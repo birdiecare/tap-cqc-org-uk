@@ -1,36 +1,69 @@
 [tool.poetry]
 name = "tap-cqc-org-uk"
-version = "0.0.5"
-description = "`tap-cqc-org-uk` is a Singer tap for cqc-org-uk, built with the Meltano SDK for Singer Taps."
-authors = ["Ben White"]
-license = "Apache 2.0"
+version = "0.0.1"
+description = "Singer tap for cqc_org_uk, built with the Meltano Singer SDK."
+readme = "README.md"
+authors = ["Ben White <ben.white@birdie.care>"]
+keywords = [
+    "ELT",
+    "cqc_org_uk",
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "<3.12,>=3.11"
-requests = "^2.32.3"
-singer-sdk = "^0.38.0"
+python = ">=3.8"
+importlib-resources = { version = "==6.4.*", python = "<3.9" }
+singer-sdk = { version="~=0.39.1", extras = [] }
+fs-s3fs = { version = "~=1.1.1", optional = true }
+requests = "~=2.32.3"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
-tox = "^3.24.4"
-flake8 = "^3.9.2"
-black = "^21.9b0"
-pydocstyle = "^6.1.1"
-mypy = "^0.910"
-types-requests = "^2.26.1"
-isort = "^5.10.1"
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8"
+singer-sdk = { version="~=0.39.1", extras = ["testing"] }
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3 # Vertical Hanging Indent
-src_paths = "tap_cqc_org_uk"
+[tool.poetry.extras]
+s3 = ["fs-s3fs"]
+
+[tool.pytest.ini_options]
+addopts = '--durations=10'
+
+[tool.mypy]
+python_version = "3.12"
+warn_unused_configs = true
+
+[tool.ruff]
+src = ["tap_cqc_org_uk"]
+target-version = "py38"
+
+[tool.ruff.lint]
+ignore = [
+    "ANN101",  # missing-type-self
+    "ANN102",  # missing-type-cls
+    "COM812",  # missing-trailing-comma
+    "ISC001",  # single-line-implicit-string-concatenation
+]
+select = ["ALL"]
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["tap_cqc_org_uk"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [build-system]
-# Uncomment the pinned version in favor of the git URL once
-# https://github.com/python-poetry/poetry-core/pull/257 is merged
-# and a new poetry-core 1.0.x is released
-requires = ["poetry-core>=1.0.0"]
-# requires = ["poetry-core @ git+https://github.com/python-poetry/poetry-core.git@main"]
+requires = ["poetry-core==1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]

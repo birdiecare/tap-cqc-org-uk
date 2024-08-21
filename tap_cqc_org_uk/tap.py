@@ -1,41 +1,41 @@
-"""cqc-org-uk tap class."""
+"""cqc_org_uk tap class."""
 
-from typing import List
+from __future__ import annotations
 
-from singer_sdk import Tap, Stream
-from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk import Tap
+from singer_sdk import typing as th
 
-# TODO: Import your custom stream types here:
-from tap_cqc_org_uk.streams import (
-    cqc_org_ukStream,
-    CQC_ProviderIdsStream,
-    CQC_ProvidersStream,
-    CQC_LocationIdsStream,
-    CQC_LocationsStream
-)
-# TODO: Compile a list of custom stream types here
-#       OR rewrite discover_streams() below with your custom logic.
-STREAM_TYPES = [
-    CQC_ProvidersStream,
-    CQC_ProviderIdsStream,
-    CQC_LocationIdsStream,
-    CQC_LocationsStream
-]
-
+from tap_cqc_org_uk import streams
 
 class Tapcqc_org_uk(Tap):
-    """cqc-org-uk tap class."""
+    """cqc_org_uk tap class."""
+
     name = "tap-cqc-org-uk"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
-        # th.Property("auth_token", th.StringType, required=False),
-        # th.Property("project_ids", th.ArrayType(th.StringType), required=True),
-        th.Property("partner_code", th.StringType),
-        th.Property("start_date", th.DateTimeType)
-        # th.Property("api_url", th.StringType, default="https://api.mysample.com"),
+        th.Property(
+            "subscription_key",
+            th.StringType,
+            required=True,
+            secret=True,
+            description="The primary key for the CQC API service",
+        ),
+        th.Property(
+            "start_date",
+            th.DateTimeType,
+            description="The earliest CQC update to sync",
+        )
     ).to_dict()
 
-    def discover_streams(self) -> List[Stream]:
-        """Return a list of discovered streams."""
-        return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+    def discover_streams(self) -> list[streams.cqc_org_ukStream]:
+        """Returns a list of discovered streams."""
+        return [
+            streams.CQC_ProvidersStream(self),
+            streams.CQC_ProviderIdsStream(self),
+            streams.CQC_LocationsStream(self),
+            streams.CQC_LocationIdsStream(self)
+        ]
+
+
+if __name__ == "__main__":
+    Tapcqc_org_uk.cli()
