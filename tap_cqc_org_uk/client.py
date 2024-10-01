@@ -108,8 +108,8 @@ class cqc_org_ukStream(RESTStream):
                 RetriableAPIError,
                 requests.exceptions.ReadTimeout,
             ),
-            max_tries=16,
-            factor=10,
+            max_tries=6,
+            factor=2,
         )(func)
         return decorator
 
